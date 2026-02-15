@@ -44,4 +44,4 @@ def shunting_stack(r: str):
         out += stack.pop()
     return out
 
-print(shunting_stack('(a*b)'))
+# print(shunting_stack('(a*b)'))
