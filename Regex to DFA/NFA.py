@@ -1,7 +1,8 @@
 from parser import shunting_stack
+from graphviz import Digraph
 
 
-class NFA:  # just has start and final states
+class NFA:  # machine just has a start and final states
     def __init__(self, start, final):
         self.start = start
         self.final = final
@@ -33,18 +34,56 @@ def connector(q1, q2):  # connect 2 nfa to each other with q1
     return NFA(q1.start, q2.final)
 
 
+def union(q1, q2):
+    q1.final.is_final = False
+    q2.final.is_final = False
+
+    new_start = State()
+    new_final = State(is_final=True)
+    new_start.add_transition(None, q1.start)
+    new_start.add_transition(None, q2.start)
+
+    q1.final.add_transition(None, new_final)
+    q2.final.add_transition(None, new_final)
+
+    return NFA(new_start, new_final)
+
+
+def star(q1):
+    new_start = State()
+    new_final = State(is_final=True)
+    q1.final.is_final = False
+
+    new_start.add_transition(None, new_final)  # * ==> 0
+    new_start.add_transition(None, q1.start)
+
+    q1.final.add_transition(None, q1.start)
+    q1.final.add_transition(None, new_final)
+
+    return NFA(new_start, new_final)
+
+# gathers all parts together
 def main(string):
     stack = []
-    s = shunting_stack(string)
+    s = shunting_stack(string)  # converting string to postfix
     for i in s:
-        if i.isalpha():
+        if i.isalnum():
             stack.append(creator(i))
+
         elif i == '.':
             right = stack.pop()
             left = stack.pop()
-
             new = connector(left, right)
             stack.append(new)
+
+        elif i == '|':
+            right = stack.pop()
+            left = stack.pop()
+            stack.append(union(left, right))
+
+        elif i == '*':
+            loop = stack.pop()
+            stack.append(star(loop))
 
     return stack.pop()
 
