@@ -1,5 +1,4 @@
-from parser import shunting_stack
-from graphviz import Digraph
+from Parser import shunting_stack
 
 
 class NFA:  # machine just has a start and final states
@@ -62,6 +61,7 @@ def star(q1):
 
     return NFA(new_start, new_final)
 
+
 # gathers all parts together
 def main(string):
     stack = []
@@ -86,10 +86,3 @@ def main(string):
             stack.append(star(loop))
 
     return stack.pop()
-
-
-infix = "ab"
-nfa_final = main(infix)
-print(f"NFA constructed from {infix}")
-print(f"Start State: {nfa_final.start}")
-print(f"Final State: {nfa_final.final}")

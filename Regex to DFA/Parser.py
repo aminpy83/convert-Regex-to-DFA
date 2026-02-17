@@ -24,7 +24,7 @@ def show_dots(s: str):
 
 def shunting_stack(r: str):
     r = show_dots(r)
-    print(r)
+    # print(r)
     stack = []
     out = ''
     for i in r:
@@ -44,4 +44,4 @@ def shunting_stack(r: str):
         out += stack.pop()
     return out
 
-# print(shunting_stack('(a*b)'))
+# print(shunting_stack('(ab)'))
