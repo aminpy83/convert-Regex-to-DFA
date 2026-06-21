@@ -26,4 +26,19 @@ def epsilon_closure(states):
     while stack:
         state = stack.pop()
         if None in state.transitions:
-            closure.add(state.transitions[None])
+            for transition in state.transitions[None]:
+                if transition not in closure:
+                    closure.add(transition)
+                    stack.append(transition)
+
+    return closure
+
+
+def move(states, symbol):
+    result_states = set()
+
+    for state in states:
+        if symbol in state.transitions:
+            result_states.update(state.transitions[symbol])
+
+    return result_states
