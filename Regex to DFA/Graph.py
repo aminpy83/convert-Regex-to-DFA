@@ -43,7 +43,7 @@ def nfa_graph(nfa, name):
 
 
 if __name__ == "__main__":
-    regex = "(Amin)"
+    regex = "(a|c)"
     print(f"Regex: {regex}")
     print(f"postfix: {shunting_stack(regex)}")
     nfa_result = main(regex)
