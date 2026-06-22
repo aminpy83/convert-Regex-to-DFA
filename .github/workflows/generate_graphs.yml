@@ -40,7 +40,7 @@ jobs:
         # اگر دکمه دستی زده شده بود از ورودی استفاده کن، در غیر این صورت مقدار پیش‌فرض
         REGEX_INPUT="${{ inputs.regex }}"
         if [ -z "$REGEX_INPUT" ]; then REGEX_INPUT="(a|c)*"; fi
-        python graph.py "$REGEX_INPUT"
+        python Graph.py "$REGEX_INPUT"
       # اگر فایل‌هایت هنوز داخل پوشه هستند خط زیر را فعال نگه دار، در غیر این صورت پاکش کن:
       # working-directory: "Regex to DFA"
 
