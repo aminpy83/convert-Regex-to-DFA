@@ -1,0 +1,45 @@
+name: Generate Automata Graphs
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-graph:
+    runs-on: ubuntu-latest
+
+    steps:
+    # ۱. دانلود کردن کدهای پروژه روی سرور گیت‌هاب
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # ۲. راه‌اندازی نسخه پایتون مناسب
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    # ۳. نصب ابزار سیستمی Graphviz (بسیار مهم)
+    - name: Install System Graphviz
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y graphviz
+
+    # ۴. نصب کتابخانه‌های پایتون
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install graphviz
+
+    # ۵. اجرای اسکریپت برای تولید عکس‌ها
+    - name: Run Graph Generator
+      run: python graph.py
+
+    # ۶. ذخیره کردن عکس‌های تولید شده به عنوان Artifact
+    - name: Upload Generated Graphs
+      uses: actions/upload-artifact@v4
+      with:
+        name: automata-visualizations
+        path: "*.png"
