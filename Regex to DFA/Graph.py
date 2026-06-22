@@ -2,6 +2,7 @@ from NFA import main
 from Parser import shunting_stack
 from DFA import nfa_to_dfa
 from graphviz import Digraph
+import sys
 
 
 def nfa_graph(nfa, name):
@@ -79,17 +80,19 @@ def dfa_graph(dfa, name):
         print('Error rendering DFA: ', e)
 
 
-# if __name__ == "__main__":
-#     regex = "(a|c)*"
-#     alphabet = ['a', 'c']
-#
-#     print(f"Regex: {regex}")
-#     print(f"Postfix: {shunting_stack(regex)}")
-#
-#     # ۱. تولید و رسم NFA
-#     nfa_result = main(regex)
-#     nfa_graph(nfa_result, 'nfa_output')
-#
-#     # ۲. تبدیل به DFA و رسم آن
-#     dfa_result = nfa_to_dfa(nfa_result, alphabet)
-#     dfa_graph(dfa_result, 'dfa_output')
+if __name__ == "__main__":
+    regex = sys.argv[1] if len(sys.argv) > 1 else "(a|c)*"
+
+    alphabet = sorted(list(set([char for char in regex if char.isalnum()])))
+
+    print(f"Processing Regex: {regex}")
+    print(f"Extracted Alphabet: {alphabet}")
+    print(f"Postfix: {shunting_stack(regex)}")
+
+    # ۱. تولید و رسم NFA
+    nfa_result = main(regex)
+    nfa_graph(nfa_result, 'nfa_output')
+
+    # ۲. تبدیل به DFA و رسم آن
+    dfa_result = nfa_to_dfa(nfa_result, alphabet)
+    dfa_graph(dfa_result, 'dfa_output')
