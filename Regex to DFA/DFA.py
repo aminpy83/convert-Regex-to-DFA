@@ -10,11 +10,10 @@ class State:  # making transitions and creating states
         self.transitions = {}
 
     def add_transition(self, name, state):
-        if name not in self.transitions:
-            self.transitions[name] = state  # every particular input -> particular destination
-        self.transitions[name].append(state)
+        self.transitions[name] = state
 
 
+# اپسیلون گذر
 def epsilon_closure(states):
     closure = set()
     stack = list()
@@ -39,14 +38,23 @@ def move(states, symbol):
 
     for state in states:
         if symbol in state.transitions:
-            result_states.update(state.transitions[symbol])
+            if isinstance(state.transitions[symbol], list):
+                result_states.update(state.transitions[symbol])
+            else:
+                result_states.add(state.transitions[symbol])
 
     return result_states
 
+
 def nfa_to_dfa(nfa, alphabet):
-    start_closure = epsilon_closure(nfa.start)
+    start_closure = epsilon_closure({nfa.start})
     unmarked_states = [start_closure]
-    dfa_states = {frozenset(start_closure): State()} # using immutable set for avoiding repetitive sets
+
+    # final states
+    is_start_final = any(s.is_final for s in start_closure)
+    start_state_dfa = State(is_final=is_start_final)
+
+    dfa_states = {frozenset(start_closure): start_state_dfa}
 
     while unmarked_states:
         state = unmarked_states.pop()
@@ -54,11 +62,17 @@ def nfa_to_dfa(nfa, alphabet):
             move_result = move(state, character)
             next_closure = epsilon_closure(move_result)
 
+            if not next_closure:
+                continue
+
             next_closure_frozen = frozenset(next_closure)
 
             if next_closure_frozen not in dfa_states:
-                dfa_states[next_closure_frozen] = State() # making new dfa with unmarks
+                is_next_final = any(s.is_final for s in next_closure)
+                dfa_states[next_closure_frozen] = State(is_final=is_next_final)
                 unmarked_states.append(next_closure)
 
             dfa_states[frozenset(state)].add_transition(character, dfa_states[next_closure_frozen])
+    final_states_dfa = [dfa_state for dfa_state in dfa_states.values() if dfa_state.is_final]
 
+    return DFA(start=start_state_dfa, end=final_states_dfa)
