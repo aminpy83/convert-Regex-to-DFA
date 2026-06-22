@@ -79,17 +79,17 @@ def dfa_graph(dfa, name):
         print('Error rendering DFA: ', e)
 
 
-if __name__ == "__main__":
-    regex = "(a|c)*"
-    alphabet = ['a', 'c']
-
-    print(f"Regex: {regex}")
-    print(f"Postfix: {shunting_stack(regex)}")
-
-    # ۱. تولید و رسم NFA
-    nfa_result = main(regex)
-    nfa_graph(nfa_result, 'nfa_output')
-
-    # ۲. تبدیل به DFA و رسم آن
-    dfa_result = nfa_to_dfa(nfa_result, alphabet)
-    dfa_graph(dfa_result, 'dfa_output')
+# if __name__ == "__main__":
+#     regex = "(a|c)*"
+#     alphabet = ['a', 'c']
+#
+#     print(f"Regex: {regex}")
+#     print(f"Postfix: {shunting_stack(regex)}")
+#
+#     # ۱. تولید و رسم NFA
+#     nfa_result = main(regex)
+#     nfa_graph(nfa_result, 'nfa_output')
+#
+#     # ۲. تبدیل به DFA و رسم آن
+#     dfa_result = nfa_to_dfa(nfa_result, alphabet)
+#     dfa_graph(dfa_result, 'dfa_output')
